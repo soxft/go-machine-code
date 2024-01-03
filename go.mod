@@ -1,4 +1,4 @@
-module github.com/soxft/machine-code
+module github.com/soxft/go-machine-code
 
 go 1.19
 

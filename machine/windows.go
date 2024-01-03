@@ -1,7 +1,3 @@
-/*
-author: superl[N.S.T]
-github: https://github.com/super-l/
-*/
 package machine
 
 import (
@@ -9,13 +5,13 @@ import (
 	"strings"
 )
 
-type WindowsMachine struct {}
+type WindowsMachine struct{}
 
 func (WindowsMachine) getMachine() MachineData {
 	machineData := MachineData{}
-	machineData.PlatformUUID , _ = GetPlatformUUID()
+	machineData.PlatformUUID, _ = GetPlatformUUID()
 	machineData.SerialNumber, _ = GetSerialNumber()
-	machineData.CpuId,_ = GetCpuId()
+	machineData.CpuId, _ = GetCpuId()
 	return machineData
 }
 
@@ -30,9 +26,9 @@ func (WindowsMachine) getSerialNumber() (serialNumber string, err error) {
 		serialNumber = strings.ReplaceAll(serialNumber, " ", "")
 		serialNumber = strings.ReplaceAll(serialNumber, "\r", "")
 	} else {
-		return "",nil
+		return "", nil
 	}
-	return serialNumber,nil
+	return serialNumber, nil
 }
 
 func (WindowsMachine) getPlatformUUID() (uuid string, err error) {
@@ -48,7 +44,7 @@ func (WindowsMachine) getPlatformUUID() (uuid string, err error) {
 		uuid = strings.ReplaceAll(uuid, " ", "")
 		uuid = strings.ReplaceAll(uuid, "\r", "")
 	} else {
-		return "",nil
+		return "", nil
 	}
 	return uuid, nil
 }
@@ -66,7 +62,7 @@ func (WindowsMachine) getCpuId() (cpuId string, err error) {
 		cpuid = strings.ReplaceAll(cpuid, " ", "")
 		cpuid = strings.ReplaceAll(cpuid, "\r", "")
 	} else {
-		return "",nil
+		return "", nil
 	}
 	return cpuid, nil
 }

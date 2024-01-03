@@ -1,7 +1,3 @@
-/*
-author: superl[N.S.T]
-github: https://github.com/super-l/
-*/
 package machine
 
 import (
@@ -12,13 +8,13 @@ import (
 	"strings"
 )
 
-type LinuxMachine struct {}
+type LinuxMachine struct{}
 
 func (LinuxMachine) getMachine() MachineData {
 	machineData := MachineData{}
-	machineData.PlatformUUID , _ = GetPlatformUUID()
+	machineData.PlatformUUID, _ = GetPlatformUUID()
 	machineData.SerialNumber, _ = GetSerialNumber()
-	machineData.CpuId,_ = GetCpuId()
+	machineData.CpuId, _ = GetCpuId()
 	return machineData
 }
 
@@ -71,7 +67,7 @@ func (LinuxMachine) getPlatformUUID() (UUID string, err error) {
 func (LinuxMachine) getCpuId2() (cpuId string, err error) {
 	// dmidecode -t processor |grep ID |head -1
 	var cmd *exec.Cmd
-	cmd = exec.Command("dmidecode", "-t", "processor","|grep ID |head -1")
+	cmd = exec.Command("dmidecode", "-t", "processor", "|grep ID |head -1")
 
 	var out bytes.Buffer
 	cmd.Stdout = &out
@@ -156,4 +152,3 @@ func ExecPipeLine(cmds ...*exec.Cmd) (string, error) {
 	}
 	return "", errors.New("no returns")
 }
-

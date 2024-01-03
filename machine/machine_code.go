@@ -1,7 +1,3 @@
-/*
-author: superl[N.S.T]
-github: https://github.com/super-l/
-*/
 package machine
 
 import (
@@ -14,13 +10,13 @@ import (
 )
 
 type MachineData struct {
-	PlatformUUID  string  `json:"platformUUID"`
-	SerialNumber  string  `json:"serialNumber"`
-	CpuId		  string  `json:"cpuId"`
-	Mac           string  `json:"mac"`
+	PlatformUUID string `json:"platformUUID"`
+	SerialNumber string `json:"serialNumber"`
+	CpuId        string `json:"cpuId"`
+	Mac          string `json:"mac"`
 }
 
-func GetMachineData() (data MachineData){
+func GetMachineData() (data MachineData) {
 	if runtime.GOOS == "darwin" {
 		sysInfo, _ := MacMachine{}.getMacSysInfo()
 		sysInfo.Mac, _ = GetMACAddress()
@@ -32,7 +28,7 @@ func GetMachineData() (data MachineData){
 		machineData.CpuId, _ = LinuxMachine{}.getCpuId()
 		machineData.Mac, _ = GetMACAddress()
 		return machineData
-	}else if runtime.GOOS == "windows" {
+	} else if runtime.GOOS == "windows" {
 		machineData := MachineData{}
 		machineData.SerialNumber, _ = WindowsMachine{}.getSerialNumber()
 		machineData.PlatformUUID, _ = WindowsMachine{}.getPlatformUUID()
@@ -43,7 +39,7 @@ func GetMachineData() (data MachineData){
 	return MachineData{}
 }
 
-func GetSerialNumber() (data string, err error ){
+func GetSerialNumber() (data string, err error) {
 	if runtime.GOOS == "darwin" {
 		return MacMachine{}.getSerialNumber()
 	} else if runtime.GOOS == "linux" {
@@ -51,10 +47,10 @@ func GetSerialNumber() (data string, err error ){
 	} else if runtime.GOOS == "windows" {
 		return WindowsMachine{}.getSerialNumber()
 	}
-	return "",nil
+	return "", nil
 }
 
-func GetPlatformUUID() (data string, err error ){
+func GetPlatformUUID() (data string, err error) {
 	if runtime.GOOS == "darwin" {
 		return MacMachine{}.getPlatformUUID()
 	} else if runtime.GOOS == "linux" {
@@ -62,11 +58,10 @@ func GetPlatformUUID() (data string, err error ){
 	} else if runtime.GOOS == "windows" {
 		return WindowsMachine{}.getPlatformUUID()
 	}
-	return "",nil
+	return "", nil
 }
 
-
-func GetCpuId() (data string, err error ){
+func GetCpuId() (data string, err error) {
 	if runtime.GOOS == "darwin" {
 		return MacMachine{}.getCpuId()
 	} else if runtime.GOOS == "linux" {
@@ -74,21 +69,21 @@ func GetCpuId() (data string, err error ){
 	} else if runtime.GOOS == "windows" {
 		return WindowsMachine{}.getCpuId()
 	}
-	return "",nil
+	return "", nil
 }
 
-func GetMACAddress() (string, error){
+func GetMACAddress() (string, error) {
 	netInterfaces, err := net.Interfaces()
 	if err != nil {
 		return "", err
 	}
 	var mac string
 	for i := 0; i < len(netInterfaces); i++ {
-		if (netInterfaces[i].Flags & net.FlagUp) != 0 && (netInterfaces[i].Flags & net.FlagLoopback) == 0{
+		if (netInterfaces[i].Flags&net.FlagUp) != 0 && (netInterfaces[i].Flags&net.FlagLoopback) == 0 {
 			addrs, _ := netInterfaces[i].Addrs()
 			for _, address := range addrs {
 				ipnet, ok := address.(*net.IPNet)
-				if  ok && ipnet.IP.IsGlobalUnicast() {
+				if ok && ipnet.IP.IsGlobalUnicast() {
 					mac = netInterfaces[i].HardwareAddr.String()
 					return mac, nil
 				}

@@ -1,7 +1,3 @@
-/*
-author: superl[N.S.T]
-github: https://github.com/super-l/
-*/
 package machine
 
 import (

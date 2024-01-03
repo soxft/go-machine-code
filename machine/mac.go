@@ -10,16 +10,19 @@ import (
 	"fmt"
 	"os"
 	"os/exec"
+	"runtime"
 	"strings"
+
+	"github.com/tidwall/gjson"
 )
 
-type MacMachine struct {}
+type MacMachine struct{}
 
 var macMachineData MachineData
 
 type macXmlStruct struct {
-	XMLName  xml.Name `xml:"plist"`
-	Array    macDataArrayStruct `xml:"array"`
+	XMLName xml.Name           `xml:"plist"`
+	Array   macDataArrayStruct `xml:"array"`
 }
 
 type macDataArrayStruct struct {
@@ -27,9 +30,9 @@ type macDataArrayStruct struct {
 }
 
 type macDictStruct struct {
-	Key    []string  `xml:"key"`
-	Real   []string  `xml:"real"`
-	String []string  `xml:"string"`
+	Key    []string           `xml:"key"`
+	Real   []string           `xml:"real"`
+	String []string           `xml:"string"`
 	Array  macDictArrayStruct `xml:"array"`
 }
 
@@ -38,12 +41,12 @@ type macDictArrayStruct struct {
 }
 
 type macDictItemStruct struct {
-	Key    []string  `xml:"key"`
+	Key     []string `xml:"key"`
 	Integer []int    `xml:"integer"`
-	String []string  `xml:"string"`
+	String  []string `xml:"string"`
 }
 
-func (machine MacMachine) getSerialNumber()(data string, err error ){
+func (machine MacMachine) getSerialNumber() (data string, err error) {
 	sysInfo, err := machine.getMacSysInfo()
 	if err != nil {
 		return "", err
@@ -67,7 +70,7 @@ func (machine MacMachine) getCpuId() (cpuId string, err error) {
 	return sysInfo.CpuId, err
 }
 
-func (machine MacMachine) getMacSysInfo() (data MachineData, err error ){
+func (machine MacMachine) getMacSysInfo() (data MachineData, err error) {
 	var cmd *exec.Cmd
 	cmd = exec.Command("system_profiler", "SPHardwareDataType", "-xml")
 
@@ -94,7 +97,7 @@ func (machine MacMachine) getMacSysInfo() (data MachineData, err error ){
 	}
 }
 
-func (MacMachine) macXmlToData(xmlcontent string) (MachineData, error){
+func (MacMachine) macXmlToData(xmlcontent string) (MachineData, error) {
 	x := macXmlStruct{}
 	err := xml.Unmarshal([]byte(xmlcontent), &x)
 	if err != nil {
@@ -104,7 +107,7 @@ func (MacMachine) macXmlToData(xmlcontent string) (MachineData, error){
 		serialData := MachineData{
 			PlatformUUID: x.Array.Dict.Array.Dict.String[count-2],
 			SerialNumber: x.Array.Dict.Array.Dict.String[count-1],
-			CpuId: "",
+			CpuId:        "",
 		}
 		return serialData, nil
 	}
@@ -112,6 +115,27 @@ func (MacMachine) macXmlToData(xmlcontent string) (MachineData, error){
 
 func (machine MacMachine) getSysCpuId() (cpuId string, err error) {
 	//sysctl -x machdep.cpu.signature
+	if runtime.GOARCH == "arm64" {
+		// m1
+		var cmd *exec.Cmd
+		cmd = exec.Command("system_profiler", "SPHardwareDataType", "-json")
+
+		var out bytes.Buffer
+		cmd.Stdout = &out
+		cmd.Stderr = os.Stderr
+
+		err = cmd.Start()
+		if err != nil {
+			return "", err
+		}
+		err = cmd.Wait()
+		if err == nil {
+			cpuId = out.String()
+			data := gjson.Get(cpuId, "SPHardwareDataType.0.chip_type")
+			return data.String(), nil
+		}
+		return "", nil
+	}
 	var cmd *exec.Cmd
 	cmd = exec.Command("sysctl", "-x", "machdep.cpu.signature")
 

@@ -127,7 +127,7 @@ func (machine MacMachine) getSysCpuId() (cpuId string, err error) {
 		err = cmd.Wait()
 		if err == nil {
 			cpuId = out.String()
-			data := gjson.Get(cpuId, "SPHardwareDataType.0.chip_type")
+			data := gjson.Get(cpuId, "SPHardwareDataType.0.platform_UUID")
 			return data.String(), nil
 		}
 		return "", nil

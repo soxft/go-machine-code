@@ -136,6 +136,7 @@ func (machine MacMachine) getSysCpuId() (cpuId string, err error) {
 		}
 		return "", nil
 	}
+
 	var cmd *exec.Cmd
 	cmd = exec.Command("sysctl", "-x", "machdep.cpu.signature")
 

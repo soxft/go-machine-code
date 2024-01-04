@@ -1,3 +1,5 @@
+github.com/soxft/go-machine-code v0.0.0-20240103154945-1ab849533250 h1:WV4XlWzrdaPxCGA8OQ3lMlIXxEXpfldWUWyU04WwC1s=
+github.com/soxft/go-machine-code v0.0.0-20240103154945-1ab849533250/go.mod h1:2n1+W6xUX4pdBsJhtqTi0ZSWeMVm8znaYu0L8CFBIJU=
 github.com/tidwall/gjson v1.17.0 h1:/Jocvlh98kcTfpN2+JzGQWQcqrPQwDrVEMApx/M5ZwM=
 github.com/tidwall/gjson v1.17.0/go.mod h1:/wbyibRr2FHMks5tjHJ5F8dMZh3AcwJEMf5vlfC0lxk=
 github.com/tidwall/match v1.1.1 h1:+Ho715JplO36QYgwN9PGYNhgZvoUSc9X2c80KVTi+GA=

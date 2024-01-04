@@ -25,6 +25,16 @@ func (WindowsMachine) getSerialNumber() (serialNumber string, err error) {
 		serialNumber = strings.ReplaceAll(serialNumber, "\n", "")
 		serialNumber = strings.ReplaceAll(serialNumber, " ", "")
 		serialNumber = strings.ReplaceAll(serialNumber, "\r", "")
+		if len(serialNumber) < 8 {
+			// 服务器 无主板序列号
+			puuid, _ := GetPlatformUUID()
+			mac, _ := GetMACAddress()
+			cpuId, _ := GetCpuId()
+			serialNumber = puuid[0:4] + mac[0:2] + cpuId[0:2]
+			serialNumber = strings.ToUpper(serialNumber)
+		}
+
+		return serialNumber, nil
 	} else {
 		return "", nil
 	}
